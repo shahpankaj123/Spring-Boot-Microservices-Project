@@ -1,8 +1,9 @@
 package com.Pankaj.Product_Services.controller;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Pankaj.Product_Services.dto.ProductDto;
 import com.Pankaj.Product_Services.service.ProductService;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/product/")
@@ -25,7 +28,11 @@ public class ProductController {
     public ResponseEntity<?> create(@RequestBody ProductDto productDto){
 
         String message=productService.ProductCreate(productDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", message);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("get-all")
