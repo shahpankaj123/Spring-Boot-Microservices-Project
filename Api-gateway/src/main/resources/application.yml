@@ -1,0 +1,17 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: USER_SERVICES
+          uri: http://127.0.0.1:8000
+          predicates:
+            - Path=/api/web/v1/user/**
+        - id: CONTACT_SERVICES
+          uri: http://127.0.0.1:8001
+          predicates:
+            - Path=/api/web/v1/contact/**
