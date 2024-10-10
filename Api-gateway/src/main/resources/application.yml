@@ -1,17 +1,26 @@
-server:
-  port: 9000
-
 spring:
-  application:
-    name: api-gateway
   cloud:
     gateway:
       routes:
-        - id: USER_SERVICES
-          uri: http://127.0.0.1:8000
+        - id: user_services
+          uri: http://localhost:8000   # URI of the user-service
           predicates:
             - Path=/api/web/v1/user/**
-        - id: CONTACT_SERVICES
-          uri: http://127.0.0.1:8001
+          filters:
+            - AddRequestHeader=X-Request-User, UserGateway   # Example of adding headers
+            - RewritePath=/users/(?<segment>.*), /${segment}  # Optional: Rewriting the path
+
+        - id: contact_services
+          uri: http://localhost:8001  # URI of the product-service
           predicates:
             - Path=/api/web/v1/contact/**
+          filters:
+            - AddRequestHeader=X-Request-Product, ProductGateway
+            - RewritePath=/products/(?<segment>.*), /${segment}
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+        - RemoveRequestHeader=Cookie
+
+server:
+   port: 9000
